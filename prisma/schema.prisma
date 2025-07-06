@@ -1,0 +1,260 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  MODERATOR
+  OPERATOR
+  VIEWER
+}
+
+enum DroneStatus {
+  AVAILABLE
+  IN_MISSION
+  MAINTENANCE
+  CHARGING
+  OFFLINE
+}
+
+enum MissionStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  ABORTED
+  FAILED
+}
+
+enum MissionType {
+  INSPECTION
+  SECURITY_PATROL
+  SITE_MAPPING
+  SURVEY
+}
+
+enum FlightPattern {
+  CROSSHATCH
+  PERIMETER
+  WAYPOINT
+  GRID
+  SPIRAL
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String
+  role          Role      @default(VIEWER)
+  isActive      Boolean   @default(true)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  createdMissions Mission[] @relation("MissionCreator")
+  assignedMissions Mission[] @relation("MissionAssignee")
+  organizationMemberships OrganizationMember[]
+  
+  @@map("users")
+}
+
+model Organization {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  members     OrganizationMember[]
+  sites       Site[]
+  drones      Drone[]
+  missions    Mission[]
+  
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String       @id @default(cuid())
+  userId         String
+  organizationId String
+  role           Role         @default(VIEWER)
+  joinedAt       DateTime     @default(now())
+  
+  // Relations
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, organizationId])
+  @@map("organization_members")
+}
+
+model Site {
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  latitude       Float
+  longitude      Float
+  altitude       Float?
+  organizationId String
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  missions       Mission[]
+  
+  @@map("sites")
+}
+
+model Drone {
+  id                String        @id @default(cuid())
+  name              String
+  model             String
+  serialNumber      String        @unique
+  status            DroneStatus   @default(AVAILABLE)
+  batteryLevel      Int           @default(100)
+  lastMaintenanceAt DateTime?
+  organizationId    String
+  currentLatitude   Float?
+  currentLongitude  Float?
+  currentAltitude   Float?
+  isActive          Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Technical specifications
+  maxFlightTime     Int           // minutes
+  maxSpeed          Float         // m/s
+  maxAltitude       Float         // meters
+  cameraResolution  String?
+  sensorTypes       String[]      // JSON array of sensor types
+  
+  // Relations
+  organization      Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  missions          Mission[]
+  flightLogs        FlightLog[]
+  
+  @@map("drones")
+}
+
+model Mission {
+  id                String          @id @default(cuid())
+  name              String
+  description       String?
+  type              MissionType
+  status            MissionStatus   @default(PLANNED)
+  priority          Int             @default(1) // 1-5 scale
+  isActive          Boolean         @default(true)
+  
+  // Mission configuration
+  flightPattern     FlightPattern   @default(WAYPOINT)
+  plannedAltitude   Float
+  plannedSpeed      Float
+  overlapPercentage Int             @default(20)
+  
+  // Timing
+  scheduledAt       DateTime?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  estimatedDuration Int?            // minutes
+  
+  // Relationships
+  createdById       String
+  assignedToId      String?
+  droneId           String
+  siteId            String
+  organizationId    String
+  
+  // Relations
+  createdBy         User            @relation("MissionCreator", fields: [createdById], references: [id])
+  assignedTo        User?           @relation("MissionAssignee", fields: [assignedToId], references: [id])
+  drone             Drone           @relation(fields: [droneId], references: [id])
+  site              Site            @relation(fields: [siteId], references: [id])
+  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  waypoints         Waypoint[]
+  flightLogs        FlightLog[]
+  surveyData        SurveyData[]
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("missions")
+}
+
+model Waypoint {
+  id          String   @id @default(cuid())
+  missionId   String
+  sequence    Int
+  latitude    Float
+  longitude   Float
+  altitude    Float
+  action      String?  // hover, capture, etc.
+  parameters  Json?    // additional parameters
+  
+  // Relations
+  mission     Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  
+  @@unique([missionId, sequence])
+  @@map("waypoints")
+}
+
+model FlightLog {
+  id            String   @id @default(cuid())
+  missionId     String
+  droneId       String
+  timestamp     DateTime @default(now())
+  latitude      Float
+  longitude     Float
+  altitude      Float
+  speed         Float
+  batteryLevel  Int
+  gpsAccuracy   Float?
+  heading       Float?   // degrees
+  
+  // Relations
+  mission       Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  drone         Drone    @relation(fields: [droneId], references: [id], onDelete: Cascade)
+  
+  @@map("flight_logs")
+}
+
+model SurveyData {
+  id              String   @id @default(cuid())
+  missionId       String
+  dataType        String   // image, video, sensor_reading, etc.
+  fileUrl         String?
+  metadata        Json?
+  capturedAt      DateTime
+  latitude        Float
+  longitude       Float
+  altitude        Float
+  
+  // Relations
+  mission         Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  
+  @@map("survey_data")
+}
+
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+  
+  @@map("system_settings")
+} 
