@@ -23,7 +23,7 @@ const clients: Record<string, Set<any>> = {};
 export function setupWebSocketServer(httpServer: HTTPServer) {
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 
-  wss.on('connection', (ws, req) => {
+  wss.on('connection', (ws: any, req: any) => {
     // For demo: parse missionId/droneId from query string
     const url = new URL(req.url || '', `http://${req.headers.host}`);
     const missionId = url.searchParams.get('missionId');

@@ -940,3 +940,68 @@
 {"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:20:12.139Z"}
 {"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:20:12.140Z"}
 {"level":"info","message":"User logged in: admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T22:26:04.437Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:36:29.485Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:36:32.837Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:36:32.838Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:36:32.838Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:36:33.185Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:36:33.714Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:36:34.011Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:36:34.096Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:36:34.097Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:36:38.468Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:36:39.368Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:36:42.429Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:36:42.430Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:36:42.430Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:36:42.613Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:36:43.125Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:36:43.415Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:36:43.477Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:36:43.477Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:36:46.207Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:36:49.257Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:36:49.258Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:36:49.258Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:36:49.477Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:36:49.978Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:36:50.260Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:36:50.315Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:36:50.316Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:36:53.035Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:36:56.227Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:36:56.228Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:36:56.228Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:36:56.398Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:36:56.894Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:36:57.171Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:36:57.222Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:36:57.222Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:36:58.016Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:37:01.136Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:37:01.136Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:37:01.137Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:37:01.393Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:37:01.915Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:37:02.208Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:37:02.850Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:37:06.071Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:37:06.072Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:37:06.072Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:37:06.305Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:37:06.819Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:37:07.105Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:37:07.159Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:37:07.159Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:37:07.839Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:37:10.879Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:37:10.880Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:37:10.880Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:37:11.066Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:37:11.587Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:37:11.875Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:37:11.927Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:37:11.928Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:37:12.986Z"}
+{"level":"info","message":"Received SIGINT, shutting down Redis...","service":"drone-management-api","timestamp":"2025-07-06T22:37:14.695Z"}
+{"level":"info","message":"Received SIGINT, shutting down database...","service":"drone-management-api","timestamp":"2025-07-06T22:37:14.696Z"}

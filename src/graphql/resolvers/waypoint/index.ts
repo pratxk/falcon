@@ -80,7 +80,7 @@ export const waypointResolvers = {
           },
         });
 
-        logger.info(`Waypoint added to mission ${missionId} by ${context.user.email}`);
+        logger.info(`Waypoint added to mission ${missionId} by ${context.user?.email || 'unknown'}`);
         return waypoint;
       } catch (error) {
         logger.error('Add waypoint error:', error);
@@ -158,7 +158,7 @@ export const waypointResolvers = {
           },
         });
 
-        logger.info(`Waypoint updated: ${id} by ${context.user.email}`);
+        logger.info(`Waypoint updated: ${id} by ${context.user?.email || 'unknown'}`);
         return updatedWaypoint;
       } catch (error) {
         logger.error('Update waypoint error:', error);
@@ -198,7 +198,7 @@ export const waypointResolvers = {
           where: { id },
         });
 
-        logger.info(`Waypoint deleted: ${id} by ${context.user.email}`);
+        logger.info(`Waypoint deleted: ${id} by ${context.user?.email || 'unknown'}`);
         return true;
       } catch (error) {
         logger.error('Delete waypoint error:', error);
@@ -263,7 +263,7 @@ export const waypointResolvers = {
           },
         });
 
-        logger.info(`Waypoints reordered for mission ${missionId} by ${context.user.email}`);
+        logger.info(`Waypoints reordered for mission ${missionId} by ${context.user?.email || 'unknown'}`);
         return updatedWaypoints;
       } catch (error) {
         logger.error('Reorder waypoints error:', error);

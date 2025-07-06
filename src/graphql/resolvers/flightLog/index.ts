@@ -118,7 +118,7 @@ export const flightLogResolvers = {
           },
         });
 
-        logger.info(`Flight data logged for mission ${input.missionId} by ${context.user.email}`);
+        logger.info(`Flight data logged for mission ${input.missionId} by ${context.user?.email || 'unknown'}`);
         return flightLog;
       } catch (error) {
         logger.error('Log flight data error:', error);

@@ -51,13 +51,13 @@ class DatabaseService {
       });
 
       // Add event listeners for better debugging
-      this.prisma.$on('query', (e) => {
+      (this.prisma as any).$on('query', (e: any) => {
         logger.debug(`Query: ${e.query}`);
         logger.debug(`Params: ${e.params}`);
         logger.debug(`Duration: ${e.duration}ms`);
       });
 
-      this.prisma.$on('error', (e) => {
+      (this.prisma as any).$on('error', (e: any) => {
         logger.error('Database error:', e);
       });
 
