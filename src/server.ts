@@ -3,29 +3,36 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
 import { createServer } from 'http';
 
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
 import { authMiddleware } from './middleware/auth';
 import { logger } from './utils/logger';
-import { redis } from './utils/redis';
+import { redisService } from './utils/redis-service';
+import { databaseService } from './utils/database';
+import cacheRoutes from './routes/cache';
+import healthRoutes from './routes/health';
 
 // Load environment variables
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
-const prisma = new PrismaClient();
 
 interface Context {
-  prisma: PrismaClient;
+  prisma: any;
   user?: any;
-  redis: typeof redis;
+  redis: any;
 }
 
 async function startServer() {
   try {
+    // Connect to database
+    const prisma = await databaseService.connect();
+    
+    // Connect to Redis
+    await redisService.connect();
+    
     // Create Express app
     const app = express();
     const httpServer = createServer(app);
@@ -55,13 +62,13 @@ async function startServer() {
         methods: ['GET', 'POST', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
       }),
-      express.json({ limit: '10mb' }),
+      express.json(),
       authMiddleware,
       expressMiddleware(server, {
         context: async ({ req }): Promise<Context> => ({
           prisma,
           user: (req as any).user,
-          redis,
+          redis: await redisService.getClient(),
         }),
       })
     );
@@ -70,6 +77,12 @@ async function startServer() {
     app.get('/', (req, res) => {
       res.json({ status: 'OK', timestamp: new Date().toISOString() });
     });
+
+    // Health check routes
+    app.use('/api/health', healthRoutes);
+    
+    // Cache management routes
+    app.use('/api/cache', cacheRoutes);
 
     // Start server
     httpServer.listen(PORT, () => {
@@ -80,8 +93,8 @@ async function startServer() {
     // Graceful shutdown
     process.on('SIGTERM', async () => {
       logger.info('SIGTERM received, shutting down gracefully');
-      await prisma.$disconnect();
-      await redis.quit();
+      await databaseService.disconnect();
+      await redisService.disconnect();
       process.exit(0);
     });
 

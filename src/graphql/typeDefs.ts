@@ -346,6 +346,7 @@ export const typeDefs = gql`
   input CreateDroneInput {
     name: String!
     model: String!
+    isActive: Boolean!
     serialNumber: String!
     organizationId: ID!
     maxFlightTime: Int!
@@ -385,6 +386,7 @@ export const typeDefs = gql`
   input UpdateMissionInput {
     name: String
     description: String
+    status: String
     type: MissionType
     priority: Int
     flightPattern: FlightPattern

@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql';
 import { Context } from '../types';
 import { requireAuth, requireRole, requireOrganizationAccess } from '../../../utils/rbac';
 import { logger } from '../../../utils/logger';
+import { cacheService, cacheKeys, cacheInvalidation } from '../../../utils/cache';
 import { 
   validateLatitude, 
   validateLongitude, 
@@ -16,7 +17,15 @@ export const droneResolvers = {
       requireAuth(context);
       requireOrganizationAccess(context, organizationId);
 
-      return await context.prisma.drone.findMany({
+      // Try to get from cache first
+      const cacheKey = cacheKeys.drones(organizationId);
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for drones: ${organizationId}`);
+        return cached;
+      }
+
+      const drones = await context.prisma.drone.findMany({
         where: {
           organizationId,
           isActive: true,
@@ -34,10 +43,24 @@ export const droneResolvers = {
           createdAt: 'desc',
         },
       });
+
+      // Cache the result for 5 minutes
+      await cacheService.set(cacheKey, drones, { ttl: 300 });
+      logger.debug(`Cached drones for organization: ${organizationId}`);
+
+      return drones;
     },
 
     drone: async (_parent: any, { id }: { id: string }, context: Context) => {
       requireAuth(context);
+
+      // Try to get from cache first
+      const cacheKey = cacheKeys.drone(id);
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for drone: ${id}`);
+        return cached;
+      }
 
       const drone = await context.prisma.drone.findUnique({
         where: { id },
@@ -67,6 +90,10 @@ export const droneResolvers = {
 
       requireOrganizationAccess(context, drone.organizationId);
 
+      // Cache the result for 10 minutes
+      await cacheService.set(cacheKey, drone, { ttl: 600 });
+      logger.debug(`Cached drone: ${id}`);
+
       return drone;
     },
 
@@ -74,7 +101,15 @@ export const droneResolvers = {
       requireAuth(context);
       requireOrganizationAccess(context, organizationId);
 
-      return await context.prisma.drone.findMany({
+      // Try to get from cache first
+      const cacheKey = cacheKeys.availableDrones(organizationId);
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for availableDrones: ${organizationId}`);
+        return cached;
+      }
+
+      const drones = await context.prisma.drone.findMany({
         where: {
           organizationId,
           isActive: true,
@@ -90,6 +125,12 @@ export const droneResolvers = {
           batteryLevel: 'desc',
         },
       });
+
+      // Cache the result for 2 minutes (shorter TTL for available drones)
+      await cacheService.set(cacheKey, drones, { ttl: 120 });
+      logger.debug(`Cached availableDrones for organization: ${organizationId}`);
+
+      return drones;
     },
   },
 
@@ -130,7 +171,10 @@ export const droneResolvers = {
           },
         });
 
-        logger.info(`Drone created: ${input.name} by ${context.user.email}`);
+        // Invalidate related caches
+        await cacheInvalidation.drones(input.organizationId);
+
+        logger.info(`Drone created: ${input.name} by ${context.user?.email}`);
         return drone;
       } catch (error) {
         logger.error('Create drone error:', error);
@@ -183,7 +227,10 @@ export const droneResolvers = {
           },
         });
 
-        logger.info(`Drone updated: ${id} by ${context.user.email}`);
+        // Invalidate related caches
+        await cacheInvalidation.drone(id, existingDrone.organizationId);
+
+        logger.info(`Drone updated: ${id} by ${context.user?.email}`);
         return drone;
       } catch (error) {
         logger.error('Update drone error:', error);
@@ -229,7 +276,7 @@ export const droneResolvers = {
           data: { isActive: false },
         });
 
-        logger.info(`Drone deleted: ${id} by ${context.user.email}`);
+        logger.info(`Drone deleted: ${id} by ${context.user?.email}`);
         return true;
       } catch (error) {
         logger.error('Delete drone error:', error);
@@ -239,7 +286,7 @@ export const droneResolvers = {
 
     updateDroneStatus: async (
       _parent: any,
-      { id, status }: { id: string; status: string },
+      { id, status }: { id: string; status: any },
       context: Context
     ) => {
       requireAuth(context);
@@ -265,7 +312,7 @@ export const droneResolvers = {
           },
         });
 
-        logger.info(`Drone status updated: ${id} to ${status} by ${context.user.email}`);
+        logger.info(`Drone status updated: ${id} to ${status} by ${context.user?.email}`);
         return drone;
       } catch (error) {
         logger.error('Update drone status error:', error);
@@ -315,7 +362,7 @@ export const droneResolvers = {
           },
         });
 
-        logger.info(`Drone location updated: ${id} by ${context.user.email}`);
+        logger.info(`Drone location updated: ${id} by ${context.user?.email}`);
         return drone;
       } catch (error) {
         logger.error('Update drone location error:', error);
@@ -355,7 +402,7 @@ export const droneResolvers = {
           },
         });
 
-        logger.info(`Drone battery updated: ${id} to ${batteryLevel}% by ${context.user.email}`);
+        logger.info(`Drone battery updated: ${id} to ${batteryLevel}% by ${context.user?.email}`);
         return drone;
       } catch (error) {
         logger.error('Update drone battery error:', error);

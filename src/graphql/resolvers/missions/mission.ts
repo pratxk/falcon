@@ -2,12 +2,21 @@ import { GraphQLError } from 'graphql';
 import { Context } from '../types';
 import { requireAuth, requireRole, requireOrganizationAccess } from '../../../utils/rbac';
 import { logger } from '../../../utils/logger';
+import { cacheService, cacheKeys, cacheInvalidation } from '../../../utils/cache';
 
 export const missionResolvers = {
   Query: {
     missions: async (_parent: any, { organizationId, status }: { organizationId: string; status?: string }, context: Context) => {
       requireAuth(context);
       requireOrganizationAccess(context, organizationId);
+
+      // Try to get from cache first
+      const cacheKey = cacheKeys.missions(organizationId, status);
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for missions: ${organizationId}`);
+        return cached;
+      }
 
       const whereClause: any = {
         organizationId,
@@ -18,7 +27,7 @@ export const missionResolvers = {
         whereClause.status = status;
       }
 
-      return await context.prisma.mission.findMany({
+      const missions = await context.prisma.mission.findMany({
         where: whereClause,
         include: {
           drone: true,
@@ -35,10 +44,24 @@ export const missionResolvers = {
           createdAt: 'desc',
         },
       });
+
+      // Cache the result for 5 minutes
+      await cacheService.set(cacheKey, missions, { ttl: 300 });
+      logger.debug(`Cached missions for organization: ${organizationId}`);
+
+      return missions;
     },
 
     mission: async (_parent: any, { id }: { id: string }, context: Context) => {
       requireAuth(context);
+
+      // Try to get from cache first
+      const cacheKey = cacheKeys.mission(id);
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for mission: ${id}`);
+        return cached;
+      }
 
       const mission = await context.prisma.mission.findUnique({
         where: { id },
@@ -73,13 +96,25 @@ export const missionResolvers = {
 
       requireOrganizationAccess(context, mission.organizationId);
 
+      // Cache the result for 10 minutes (longer TTL for individual missions)
+      await cacheService.set(cacheKey, mission, { ttl: 600 });
+      logger.debug(`Cached mission: ${id}`);
+
       return mission;
     },
 
     myMissions: async (_parent: any, _args: any, context: Context) => {
       requireAuth(context);
 
-      return await context.prisma.mission.findMany({
+      // Try to get from cache first
+      const cacheKey = cacheKeys.myMissions(context.user?.id || '');
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for myMissions: ${context.user?.id}`);
+        return cached;
+      }
+
+      const missions = await context.prisma.mission.findMany({
         where: {
           OR: [
             { createdById: context.user?.id },
@@ -97,13 +132,27 @@ export const missionResolvers = {
           createdAt: 'desc',
         },
       });
+
+      // Cache the result for 5 minutes
+      await cacheService.set(cacheKey, missions, { ttl: 300 });
+      logger.debug(`Cached myMissions for user: ${context.user?.id || 'unknown'}`);
+
+      return missions;
     },
 
     activeMissions: async (_parent: any, { organizationId }: { organizationId: string }, context: Context) => {
       requireAuth(context);
       requireOrganizationAccess(context, organizationId);
 
-      return await context.prisma.mission.findMany({
+      // Try to get from cache first
+      const cacheKey = cacheKeys.activeMissions(organizationId);
+      const cached = await cacheService.get(cacheKey);
+      if (cached) {
+        logger.debug(`Cache hit for activeMissions: ${organizationId}`);
+        return cached;
+      }
+
+      const missions = await context.prisma.mission.findMany({
         where: {
           organizationId,
           status: 'IN_PROGRESS',
@@ -119,6 +168,12 @@ export const missionResolvers = {
           createdAt: 'desc',
         },
       });
+
+      // Cache the result for 2 minutes (shorter TTL for active missions)
+      await cacheService.set(cacheKey, missions, { ttl: 120 });
+      logger.debug(`Cached activeMissions for organization: ${organizationId}`);
+
+      return missions;
     },
   },
 
@@ -213,6 +268,10 @@ export const missionResolvers = {
           });
         }
 
+        // Invalidate related caches
+        await cacheInvalidation.missions(input.organizationId);
+        await cacheInvalidation.drones(input.organizationId);
+
         logger.info(`Mission created: ${input.name} by ${context.user?.email}`);
         return mission;
       } catch (error) {
@@ -282,6 +341,9 @@ export const missionResolvers = {
           },
         });
 
+        // Invalidate related caches
+        await cacheInvalidation.mission(id, existingMission.organizationId);
+
         logger.info(`Mission updated: ${id} by ${context.user?.email}`);
         return mission;
       } catch (error) {
@@ -320,6 +382,9 @@ export const missionResolvers = {
           where: { id },
           data: { isActive: false },    
         });
+
+        // Invalidate related caches
+        await cacheInvalidation.mission(id, existingMission.organizationId);
 
         logger.info(`Mission deleted: ${id} by ${context.user?.email}`);
         return true;

@@ -1,26 +1,64 @@
-import Redis from 'ioredis';
+import { getRedisClient, redisService } from './redis-service';
 
-const redisConfig = {
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  username: process.env.REDIS_USERNAME,
-  password: process.env.REDIS_PASSWORD,
-  db: parseInt(process.env.REDIS_DB || '0'),
-  retryDelayOnFailover: 100,
-  maxRetriesPerRequest: 3,
-  tls: process.env.REDIS_HOST?.includes('upstash.io') ? {} : undefined,
+// Export the Redis service for direct access
+export { redisService, getRedisClient };
+
+// For backward compatibility, export a redis instance
+let redisInstance: any = null;
+
+export const redis = {
+  async getClient() {
+    if (!redisInstance) {
+      redisInstance = await getRedisClient();
+    }
+    return redisInstance;
+  },
+  
+  async set(key: string, value: string, ttl?: number) {
+    const client = await this.getClient();
+    if (ttl) {
+      return await client.setex(key, ttl, value);
+    }
+    return await client.set(key, value);
+  },
+  
+  async get(key: string) {
+    const client = await this.getClient();
+    return await client.get(key);
+  },
+  
+  async exists(key: string) {
+    const client = await this.getClient();
+    return await client.exists(key);
+  },
+  
+  async ping() {
+    const client = await this.getClient();
+    return await client.ping();
+  },
+  
+  async keys(pattern: string) {
+    const client = await this.getClient();
+    return await client.keys(pattern);
+  },
+  
+  async dbsize() {
+    const client = await this.getClient();
+    return await client.dbsize();
+  },
+  
+  async info(section?: string) {
+    const client = await this.getClient();
+    return await client.info(section);
+  },
+  
+  async setex(key: string, ttl: number, value: string) {
+    const client = await this.getClient();
+    return await client.setex(key, ttl, value);
+  },
+  
+  async del(...keys: string[]) {
+    const client = await this.getClient();
+    return await client.del(...keys);
+  }
 };
-
-export const redis = new Redis(redisConfig);
-
-redis.on('error', (error) => {
-  console.error('Redis connection error:', error);
-});
-
-redis.on('connect', () => {
-  console.log('Connected to Redis');
-});
-
-redis.on('ready', () => {
-  console.log('Redis is ready');
-});
