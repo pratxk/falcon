@@ -1,20 +1,26 @@
 # Use Node.js 18 Alpine as base image
 FROM node:18-alpine
 
+# Install Yarn
+RUN apk add --no-cache yarn
+
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files and yarn.lock
+COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN yarn install --frozen-lockfile --production=false
 
 # Copy source code
 COPY . .
 
+# Generate Prisma client
+RUN yarn prisma:generate
+
 # Build the application
-RUN npm run build
+RUN yarn build
 
 # Create logs directory
 RUN mkdir -p logs
@@ -27,4 +33,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:4000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start the application
-CMD ["npm", "start"] 
+CMD ["yarn", "start"] 

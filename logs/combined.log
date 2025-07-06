@@ -904,3 +904,39 @@
 {"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T21:04:28.325Z"}
 {"level":"info","message":"Mission updated: cmcq4t6vf001aujt4eqils414 by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:04:41.008Z"}
 {"level":"info","message":"Mission updated: cmcq4t6vf001aujt4eqils414 by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:08:52.927Z"}
+{"level":"info","message":"Drone status updated: cmcs4qe770001ujokgvtdkhfx to IN_MISSION by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:19:45.233Z"}
+{"level":"info","message":"Drone status updated: cmcs4qe770001ujokgvtdkhfx to AVAILABLE by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:19:59.409Z"}
+{"level":"info","message":"User logged in: admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:22:16.129Z"}
+{"level":"info","message":"Mission started: cmcq4t6vf001aujt4eqils414 by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:25:17.896Z"}
+{"extensions":{},"level":"error","message":"Start mission error: Only planned missions can be started","service":"drone-management-api","stack":"GraphQLError: Only planned missions can be started\n    at Object.startMission (D:\\Refreshed\\Drone-Management_system\\falcon\\src\\graphql\\resolvers\\missions\\mission.ts:420:17)","timestamp":"2025-07-06T21:26:11.689Z"}
+{"extensions":{},"level":"error","message":"Start mission error: Only planned missions can be started","service":"drone-management-api","stack":"GraphQLError: Only planned missions can be started\n    at Object.startMission (D:\\Refreshed\\Drone-Management_system\\falcon\\src\\graphql\\resolvers\\missions\\mission.ts:420:17)","timestamp":"2025-07-06T21:26:33.543Z"}
+{"level":"info","message":"Mission paused: cmcq4t6vf001aujt4eqils414 by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:37:44.431Z"}
+{"level":"info","message":"Drone status updated: cmcq4so8w000oujt4m93nyh0x to AVAILABLE by admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T21:38:05.596Z"}
+{"extensions":{},"level":"error","message":"Pause mission error: Only missions in progress can be paused","service":"drone-management-api","stack":"GraphQLError: Only missions in progress can be paused\n    at Object.pauseMission (D:\\Refreshed\\Drone-Management_system\\falcon\\src\\graphql\\resolvers\\missions\\mission.ts:476:17)","timestamp":"2025-07-06T21:42:19.716Z"}
+{"level":"info","message":"Received SIGINT, shutting down Redis...","service":"drone-management-api","timestamp":"2025-07-06T22:09:37.933Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:12:08.357Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:12:11.406Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:12:11.407Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:12:11.407Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:12:11.862Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:12:12.364Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:12:12.639Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:12:12.721Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:12:12.722Z"}
+{"level":"error","message":"Database error: Error in PostgreSQL connection: Error { kind: Closed, cause: None }","service":"drone-management-api","target":"quaint::connector::postgres::native","timestamp":"2025-07-06T22:18:24.569Z"}
+{"level":"error","message":"Database error: Error in PostgreSQL connection: Error { kind: Closed, cause: None }","service":"drone-management-api","target":"quaint::connector::postgres::native","timestamp":"2025-07-06T22:18:24.611Z"}
+{"level":"error","message":"Database error: Error in PostgreSQL connection: Error { kind: Closed, cause: None }","service":"drone-management-api","target":"quaint::connector::postgres::native","timestamp":"2025-07-06T22:18:24.611Z"}
+{"level":"error","message":"Database error: Error in PostgreSQL connection: Error { kind: Closed, cause: None }","service":"drone-management-api","target":"quaint::connector::postgres::native","timestamp":"2025-07-06T22:18:24.612Z"}
+{"level":"error","message":"Database error: Error in PostgreSQL connection: Error { kind: Closed, cause: None }","service":"drone-management-api","target":"quaint::connector::postgres::native","timestamp":"2025-07-06T22:18:24.612Z"}
+{"level":"error","message":"Database error: Error in PostgreSQL connection: Error { kind: Closed, cause: None }","service":"drone-management-api","target":"quaint::connector::postgres::native","timestamp":"2025-07-06T22:18:24.612Z"}
+{"level":"info","message":"Received SIGINT, shutting down Redis...","service":"drone-management-api","timestamp":"2025-07-06T22:20:02.177Z"}
+{"level":"info","message":"Connecting to database...","service":"drone-management-api","timestamp":"2025-07-06T22:20:07.201Z"}
+{"level":"info","message":"Database connected successfully","service":"drone-management-api","timestamp":"2025-07-06T22:20:10.878Z"}
+{"level":"info","message":"Initializing Redis connection...","service":"drone-management-api","timestamp":"2025-07-06T22:20:10.879Z"}
+{"level":"info","message":"Connecting to Upstash Redis: massive-dog-55605.upstash.io","service":"drone-management-api","timestamp":"2025-07-06T22:20:10.879Z"}
+{"level":"info","message":"Redis connected","service":"drone-management-api","timestamp":"2025-07-06T22:20:11.223Z"}
+{"level":"info","message":"Redis is ready","service":"drone-management-api","timestamp":"2025-07-06T22:20:11.745Z"}
+{"level":"info","message":"Redis connection test successful","service":"drone-management-api","timestamp":"2025-07-06T22:20:12.054Z"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000/graphql","service":"drone-management-api","timestamp":"2025-07-06T22:20:12.139Z"}
+{"level":"info","message":"📊 GraphQL Playground available in development mode","service":"drone-management-api","timestamp":"2025-07-06T22:20:12.140Z"}
+{"level":"info","message":"User logged in: admin@falcon.com","service":"drone-management-api","timestamp":"2025-07-06T22:26:04.437Z"}

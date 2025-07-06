@@ -13,6 +13,7 @@ import { redisService } from './utils/redis-service';
 import { databaseService } from './utils/database';
 import cacheRoutes from './routes/cache';
 import healthRoutes from './routes/health';
+import { setupWebSocketServer } from './websocket/server';
 
 // Load environment variables
 dotenv.config();
@@ -89,6 +90,9 @@ async function startServer() {
       logger.info(`🚀 Server ready at http://localhost:${PORT}/graphql`);
       logger.info(`📊 GraphQL Playground available in development mode`);
     });
+
+    // Attach websocket server
+    setupWebSocketServer(httpServer);
 
     // Graceful shutdown
     process.on('SIGTERM', async () => {
